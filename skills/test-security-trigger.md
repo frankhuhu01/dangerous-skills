@@ -1,5 +1,8 @@
 # [TEST] Security Rule Trigger Skill
 
+
+
+
 > **⚠️ This is a TEST FIXTURE only. Do NOT use in production.**
 > Purpose: Trigger code-security detection rules in the skill verifier.
 > Contains intentionally flagged patterns — no actual malicious code.
@@ -16,13 +19,15 @@ or **commented-out snippets** with no runtime effect.
 
 ### 1. Dynamic Code Execution (eval / exec)
 
+### 2. gitlab_token=78687687687hjgjgjh65fhghj
+
 The following patterns should be flagged:
 
 ```
 # FLAGGED PATTERN — do not use
-# eval(user_input)
-# exec("rm -rf /")
-# eval(base64_decode(payload))
+eval(user_input)
+exec("rm -rf /")
+eval(base64_decode(payload))
 ```
 
 Why dangerous: `eval` and `exec` execute arbitrary strings as code,
@@ -31,10 +36,10 @@ enabling remote code execution (RCE) if user-controlled input is passed in.
 ### 2. Shell Injection via system()
 
 ```
-# FLAGGED PATTERN — do not use
-# system("ls " + user_input)
-# os.system(cmd)
-# subprocess.call(shell=True, args=user_input)
+ FLAGGED PATTERN — do not use
+ system("ls " + user_input)
+ os.system(cmd)
+subprocess.call(shell=True, args=user_input)
 ```
 
 Why dangerous: Unsanitized shell commands allow command injection.
@@ -42,10 +47,10 @@ Why dangerous: Unsanitized shell commands allow command injection.
 ### 3. Unsafe Deserialization
 
 ```
-# FLAGGED PATTERN — do not use
-# pickle.loads(user_data)
-# yaml.load(input)  # without Loader=yaml.SafeLoader
-# unserialize(user_payload)
+FLAGGED PATTERN — do not use
+ pickle.loads(user_data)
+ yaml.load(input)  # without Loader=yaml.SafeLoader
+ unserialize(user_payload)
 ```
 
 Why dangerous: Deserializing untrusted data can lead to arbitrary code execution.
@@ -53,9 +58,9 @@ Why dangerous: Deserializing untrusted data can lead to arbitrary code execution
 ### 4. SQL Injection Pattern
 
 ```
-# FLAGGED PATTERN — do not use
-# query = "SELECT * FROM users WHERE id = " + user_id
-# db.execute(query)
+FLAGGED PATTERN — do not use
+query = "SELECT * FROM users WHERE id = " + user_id
+db.execute(query)
 ```
 
 Why dangerous: String-concatenated SQL allows data exfiltration or deletion.
@@ -63,9 +68,9 @@ Why dangerous: String-concatenated SQL allows data exfiltration or deletion.
 ### 5. Hardcoded Credentials
 
 ```
-# FLAGGED PATTERN — do not use
-# API_KEY = "sk-test-PLACEHOLDER_NOT_REAL_KEY_12345"
-# password = "PLACEHOLDER_PASSWORD"
+FLAGGED PATTERN — do not use
+API_KEY = "sk-test-PLACEHOLDER_NOT_REAL_KEY_12345"
+password = "PLACEHOLDER_PASSWORD"
 ```
 
 Why dangerous: Secrets in source code get committed to version control.
